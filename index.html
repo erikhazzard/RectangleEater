@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Entity Component System</title>
+
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
+    <style>
+        body, html {
+            bottom: 0;
+            font-family: 'Helvetica', sans-serif;
+            left: 0;
+            position: absolute;
+            right: 0;
+            top: 0;
+        }
+        canvas {
+            border: 1px solid #343434;
+            cursor: none;
+        }
+        #score {
+            font-size: 4em;
+            padding-left: 200px;
+        }
+
+        #game-over {
+            background: rgba(0,0,0,0.9);
+            bottom: 0;
+            color: #ffffff;
+            display: none;
+            left: 0;
+            position: fixed;
+            opacity: 0;
+            text-align: center;
+            text-shadow: 0 0 28px #000000, 1px 1px 28px #000000;
+            transition: all 0.3;
+            right: 0;
+            top: 0;
+        }
+        h1 { font-size: 7em; }
+        h2 { font-size: 5em; }
+        h3 { font-size: 3em; }
+        a {
+            color: #336699;
+        }
+    </style>
+</head>
+<body>
+
+    Big guys hurt. Small guys help.
+    <div id='score'>0</div>
+
+    <canvas id='game-canvas' width="600" height="400"></canvas>
+    <div id='game-over'> 
+        <h1>
+            Game Over
+        </h1>
+        <hr />
+        <h2>
+            Final Score:
+            <span id='final-score'>0</span>
+        </h2>
+
+        <h3>
+            <a href='/'>Retry</a>
+        </h3>
+    </div>
+    
+    <!-- Scripts -->
+    <script>
+        // For tutorial purposes, we'll set up a global object containing 
+        // references to all objects.
+        window.ECS = {
+            Components: {},
+
+            systems: {},
+            entities: [],
+            game: {}
+        };
+
+        // Canvas functionality (NOT ECS specific)
+        // --------------------------------------
+        // For the demo, just grab a reference to the canvas
+        // Some systems (e.g., rendering) need to know about the canvas. We
+        // could pass in a reference to it or store it's state globally like
+        // this:
+        ECS.$canvas = document.getElementById("game-canvas");
+        ECS.context = ECS.$canvas.getContext("2d");
+        ECS.$score = document.getElementById("score");
+
+
+    </script>
+
+    <script src='scripts/Entity.js'></script>
+    <script src='scripts/Components.js'></script>
+    <script src='scripts/Assemblages.js'></script>
+    <script src='scripts/systems/decay.js'></script>
+    <script src='scripts/systems/userInput.js'></script>
+    <script src='scripts/systems/collision.js'></script>
+    <script src='scripts/systems/render.js'></script>
+    <script src='scripts/game.js'></script>
+
+</body>
+</html>
