@@ -4,6 +4,9 @@
  *  This system "decays" entities that have a health component. Each tick
  *  decreases the size and health slightly
  *
+ *  This is where a lot of the core gameplay experience comes from. Too slow,
+ *  the game is too easy. If it decays to fast, the game isn't so fun.
+ *
  * ========================================================================= */
 // Setup the system
 // --------------------------------------
@@ -32,6 +35,7 @@ ECS.systems.decay = function systemDecay ( entities ) {
 
             // Decrease health depending on current health
             // --------------------------
+            // Here's where we configure how fun the game is
             if(curEntity.components.health.value < 0.7){
                 curEntity.components.health.value -= 0.01;
 
@@ -39,12 +43,12 @@ ECS.systems.decay = function systemDecay ( entities ) {
                 curEntity.components.health.value -= 0.03;
 
             } else if(curEntity.components.health.value < 10){
-                curEntity.components.health.value -= 0.05;
+                curEntity.components.health.value -= 0.07;
 
             } else if(curEntity.components.health.value < 20){
                 curEntity.components.health.value -= 0.15;
-
             } else {
+                // If the square is huge, it should very quickly decay
                 curEntity.components.health.value -= 1;
             }
 
