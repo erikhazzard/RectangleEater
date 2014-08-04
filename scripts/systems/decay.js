@@ -56,13 +56,13 @@ ECS.systems.decay = function systemDecay ( entities ) {
             // --------------------------
             if(curEntity.components.health.value >= 0){
 
-                // Entity is still ALIVE
-                if(curEntity.components.appearance.size){
-                    curEntity.components.appearance.size = curEntity.components.health.value;
-                }
-
+                // Set style based on other components too - player controlled 
+                // entity should be style differently based on their health
                 // Update appearance based on health
-                if(curEntity.components.playerControlled){
+                // NOTE: Even though we set appearance properties here, they
+                // don't get rendered here - they get rendered in the render
+                // system
+                if(curEntity.components.playerControlled){ 
                     if(curEntity.components.health.value > 10){
                         curEntity.components.appearance.colors.r = 50;
                         curEntity.components.appearance.colors.g = 255;
@@ -72,6 +72,11 @@ ECS.systems.decay = function systemDecay ( entities ) {
                         curEntity.components.appearance.colors.g = 50;
                         curEntity.components.appearance.colors.b = 50;
                     } 
+                }
+
+                // Entity is still ALIVE
+                if(curEntity.components.appearance.size){
+                    curEntity.components.appearance.size = curEntity.components.health.value;
                 }
 
             } else {

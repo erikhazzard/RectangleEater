@@ -90,7 +90,7 @@ ECS.Game = function Game (){
     this._running = true; // is the game going?
     this.endGame = function endGame(){ 
         self._running = false;
-        document.getElementById('final-score').innerHTML = +(ECS.$score.innerHTML);
+        document.getElementById('final-score').innerHTML = ECS.score;
         document.getElementById('game-over').className = '';
 
         // set a small timeout to make sure we set the background

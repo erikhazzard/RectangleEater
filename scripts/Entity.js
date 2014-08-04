@@ -27,9 +27,18 @@ ECS.Entity.prototype.addComponent = function addComponent ( component ){
     this.components[component.name] = component;
     return this;
 };
-ECS.Entity.prototype.removeComponent = function removeComponent ( component ){
-    // Remove component data by removing the reference to it
-    delete this.components[component.name];
+ECS.Entity.prototype.removeComponent = function removeComponent ( componentName ){
+    // Remove component data by removing the reference to it.
+    // Allows either a component function or a string of a component name to be
+    // passed in
+    var name = componentName; // assume a string was passed in
+
+    if(typeof componentName === 'function'){ 
+        // get the name from the prototype of the passed component function
+        name = componentName.prototype.name;
+    }
+
+    delete this.components[name];
     return this;
 };
 

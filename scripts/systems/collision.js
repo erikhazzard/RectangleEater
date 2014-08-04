@@ -45,6 +45,9 @@ ECS.systems.collision = function systemCollision ( entities ) {
     // iterate over all entities
     for( var entityId in entities ){
         curEntity = entities[entityId];
+
+        // NOTE: Even though we set the colors here, we don't render them 
+        //  (that's the job of the renderer system)
         curEntity.components.appearance.colors.r = 0;
 
         // Only check for collision on player controllable entities 
@@ -129,7 +132,8 @@ ECS.systems.collision = function systemCollision ( entities ) {
                         }
 
                         // update the score
-                        ECS.$score.innerHTML = +(ECS.$score.innerHTML) + 1;
+                        ECS.score++;
+                        ECS.$score.innerHTML = ECS.score;
 
                         delete ECS.entities[entityId2];
 
@@ -142,6 +146,14 @@ ECS.systems.collision = function systemCollision ( entities ) {
 
     // Add new entities if the player collided with any entities
     // ----------------------------------
+    var chanceDecay = 0.8;
+    var numNewEntities = 3;
+
+    if(ECS.score > 100){
+        chanceDecay = 0.6;
+        numNewEntities = 4;
+    }
+
     if(entityIdsCollidedWith.length > 0){
         for(i=0; i<entityIdsCollidedWith.length; i++){
             var newEntity;
@@ -149,14 +161,14 @@ ECS.systems.collision = function systemCollision ( entities ) {
             // Don't add more entities if there are already too many
             if(Object.keys(ECS.entities).length < 30){
 
-                for(var k=0; k < 3; k++){
+                for(var k=0; k < numNewEntities; k++){
                     // Add some new collision rects randomly
                     if(Math.random() < 0.8){
                         newEntity = new ECS.Assemblages.CollisionRect();
                         ECS.entities[newEntity.id] = newEntity;
 
-                        // add a 60% chance that they'll decay
-                        if(Math.random() < 0.8){
+                        // add a % chance that they'll decay
+                        if(Math.random() < chanceDecay){
                             newEntity.addComponent( new ECS.Components.Health() );
                         }
                     }
