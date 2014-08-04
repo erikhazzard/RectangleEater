@@ -36,8 +36,8 @@ ECS.systems.userInput = function systemUserInput ( entities ) {
     var curEntity; 
 
     // iterate over all entities
-    for( var i=0, len=entities.length; i < len; i++ ){
-        curEntity = entities[i];
+    for( var entityId in entities ){
+        curEntity = entities[entityId];
 
         // Only run logic if entity has relevant components
         if( curEntity.components.playerControlled ){

@@ -33,8 +33,8 @@ ECS.systems.render = function systemRender ( entities ) {
     var curEntity, fillStyle; 
 
     // iterate over all entities
-    for( var i=0, len=entities.length; i < len; i++ ){
-        curEntity = entities[i];
+    for( var entityId in entities ){
+        curEntity = entities[entityId];
 
         // Only run logic if entity has relevant components
         //
@@ -60,7 +60,24 @@ ECS.systems.render = function systemRender ( entities ) {
 
             ECS.context.fillStyle = fillStyle;
 
+            // Color big squares differently
+            if(!curEntity.components.playerControlled &&
+            curEntity.components.appearance.size > 12){
+                ECS.context.fillStyle = 'rgba(0,0,0,0.8)';
+            }
+
+            // draw a little black line around every rect
+            ECS.context.strokeStyle = 'rgba(0,0,0,1)';
+
+            // draw the rect
             ECS.context.fillRect( 
+                curEntity.components.position.x - curEntity.components.appearance.size,
+                curEntity.components.position.y - curEntity.components.appearance.size,
+                curEntity.components.appearance.size * 2,
+                curEntity.components.appearance.size * 2
+            );
+            // stroke it
+            ECS.context.strokeRect(
                 curEntity.components.position.x - curEntity.components.appearance.size,
                 curEntity.components.position.y - curEntity.components.appearance.size,
                 curEntity.components.appearance.size * 2,

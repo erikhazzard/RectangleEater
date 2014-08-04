@@ -7,13 +7,21 @@
  * ========================================================================= */
 ECS.Entity = function Entity(){
     // Generate a pseudo random ID
-    this.id = (+new Date()).toString(16);
+    this.id = (+new Date()).toString(16) + 
+        (Math.random() * 100000000 | 0).toString(16) +
+        (Math.random() * 100000000 | 0) +
+        ECS.Entity.prototype._count;
+
+    // increment counter
+    ECS.Entity.prototype._count++;
 
     // The component data will live in this object
     this.components = {};
 
     return this;
 };
+// keep track of entities created
+ECS.Entity.prototype._count = 0;
 
 ECS.Entity.prototype.addComponent = function addComponent ( component ){
     // Add component data to the entity

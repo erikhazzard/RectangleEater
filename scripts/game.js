@@ -13,7 +13,7 @@ ECS.Game = function Game (){
 
     // Create some entities
     // ----------------------------------
-    var entities = [];
+    var entities = {}; // object containing { id: entity  }
     var entity;
 
     // Create a bunch of random entities
@@ -30,19 +30,23 @@ ECS.Game = function Game (){
         // here. Could provide other gameplay mechanics perhaps?
         entity.addComponent( new ECS.Components.Collision());
 
-        entities.push(entity);
+        entities[entity.id] = entity;
     }
 
     // PLAYER entity
     // ----------------------------------
     // Make the last entity the "PC" entity - it must be player controlled,
     // have health and collision components
-    entities[entities.length-1].addComponent( new ECS.Components.PlayerControlled() );
-    entities[entities.length-1].addComponent( new ECS.Components.Health() );
-    entities[entities.length-1].addComponent( new ECS.Components.Collision() );
+    entity = new ECS.Entity();
+    entity.addComponent( new ECS.Components.Appearance());
+    entity.addComponent( new ECS.Components.Position());
+    entity.addComponent( new ECS.Components.PlayerControlled() );
+    entity.addComponent( new ECS.Components.Health() );
+    entity.addComponent( new ECS.Components.Collision() );
 
     // we can also edit any component, as it's just data
-    entities[entities.length-1].components.appearance.colors.g = 255;
+    entity.components.appearance.colors.g = 255;
+    entities[entity.id] = entity;
 
 
     // store reference to entities
@@ -86,8 +90,7 @@ ECS.Game = function Game (){
     this.endGame = function endGame(){ 
         self._running = false;
         document.getElementById('final-score').innerHTML = +(ECS.$score.innerHTML);
-        document.getElementById('game-over').style.display = 'block';
-        document.getElementById('game-over').style.opacity = 1;
+        document.getElementById('game-over').className = '';
     };
 
 

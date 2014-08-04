@@ -17,27 +17,43 @@
             top: 0;
         }
         canvas {
+            background: #ffffff;
             border: 1px solid #343434;
             cursor: none;
+            display: table;
+            margin: 0 auto;
+            transition: all 0.2s;
+            position: relative;
         }
+        canvas.badHit {
+            background: rgba(255,0,0,0.4);
+        }
+        canvas.goodHit {
+            background: rgba(0,255,0,0.4);
+        }
+
         #score {
             font-size: 4em;
-            padding-left: 200px;
+            text-shadow: 0 0 1px #343434;
         }
 
         #game-over {
-            background: rgba(0,0,0,0.9);
+            background: rgba(0,0,0,0.95);
             bottom: 0;
             color: #ffffff;
-            display: none;
             left: 0;
             position: fixed;
-            opacity: 0;
+            opacity: 1;
             text-align: center;
             text-shadow: 0 0 28px #000000, 1px 1px 28px #000000;
-            transition: all 0.3;
+            transition: all 0.3s;
             right: 0;
             top: 0;
+            visibility: visible;
+        }
+        #game-over.hidden {
+            opacity: 0;
+            visibility: hidden;
         }
         h1 { font-size: 7em; }
         h2 { font-size: 5em; }
@@ -45,19 +61,23 @@
         a {
             color: #336699;
         }
+        .center { 
+            text-align: center;
+        }
+        .description {
+            padding-top: 2em;
+            font-style: italic;
+        }
     </style>
 </head>
 <body>
-
-    Big guys hurt. Small guys help.
-    <div id='score'>0</div>
+    <div id='score' class='center'>0</div>
 
     <canvas id='game-canvas' width="600" height="400"></canvas>
-    <div id='game-over'> 
+    <div id='game-over' class='hidden'> 
         <h1>
             Game Over
         </h1>
-        <hr />
         <h2>
             Final Score:
             <span id='final-score'>0</span>
@@ -66,6 +86,10 @@
         <h3>
             <a href='/'>Retry</a>
         </h3>
+    </div>
+
+    <div class='description center'>
+        Big guys hurt. Small guys help.
     </div>
     
     <!-- Scripts -->

@@ -40,11 +40,11 @@ ECS.systems.collision = function systemCollision ( entities ) {
     // assume all entities are passed in and iterate over them.
 
     var curEntity; 
-    var entityIndiciesCollidedWith = [];
+    var entityIdsCollidedWith = [];
 
     // iterate over all entities
-    for( var i=0, len=entities.length; i < len; i++ ){
-        curEntity = entities[i];
+    for( var entityId in entities ){
+        curEntity = entities[entityId];
         curEntity.components.appearance.colors.r = 0;
 
         // Only check for collision on player controllable entities 
@@ -59,13 +59,13 @@ ECS.systems.collision = function systemCollision ( entities ) {
 
             // test for intersection of player controlled rects vs. all other
             // collision rects
-            for( var j=0; j < len; j++){
+            for( var entityId2 in entities){ 
                 // Don't check player controller entities for collisions 
                 // (otherwise, it'd always be true)
-                if( !entities[j].components.playerControlled &&
-                    entities[j].components.position &&
-                    entities[j].components.collision &&
-                    entities[j].components.appearance ){
+                if( !entities[entityId2].components.playerControlled &&
+                    entities[entityId2].components.position &&
+                    entities[entityId2].components.collision &&
+                    entities[entityId2].components.appearance ){
 
                     if( doesIntersect( 
                         {
@@ -73,36 +73,65 @@ ECS.systems.collision = function systemCollision ( entities ) {
                             size: curEntity.components.appearance.size
                         },
                         {
-                            position: entities[j].components.position, 
-                            size: entities[j].components.appearance.size
+                            position: entities[entityId2].components.position, 
+                            size: entities[entityId2].components.appearance.size
                         }
                     )){
                         curEntity.components.appearance.colors.r = 255;
-                        entities[j].components.appearance.colors.r = 150;
+                        entities[entityId2].components.appearance.colors.r = 150;
 
                         // Don't modify the array in place; we're still iterating
                         // over it
-                        entityIndiciesCollidedWith.push(j);
+                        entityIdsCollidedWith.push(entityId);
+                        var negativeDamageCutoff = 12;
 
                         if(curEntity.components.health){
                             // Increase the entity's health, it ate something
                             curEntity.components.health.value += Math.max(
                                 -2,
-                                12 - entities[j].components.appearance.size
+                                negativeDamageCutoff - entities[entityId2].components.appearance.size
                             );
 
                             // extra bonus for hitting small entities
-                            if(entities[j].components.appearance.size < 1.5){
-                                // don't let it get out of control
+                            if(entities[entityId2].components.appearance.size < 1.3){
                                 if(curEntity.components.health.value < 30){
-                                    curEntity.components.health.value += 5;
+                                    // Add some bonus health if it's really small,
+                                    // but don't let it get out of control
+                                    curEntity.components.health.value += 9;
                                 }
                             }
+                            if ( entities[entityId2].components.appearance.size > negativeDamageCutoff ){
+                                // Flash the canvas. NOTE: This is ok for a tutorial,
+                                // but ideally this would not be coupled in the
+                                // collision system
+                                ECS.$canvas.className='badHit';
+                                setTimeout(function(){
+                                    ECS.$canvas.className='';
+                                }, 100);
 
+                                // substract even more health from the player
+                                // but don't let it take away more than 5 dm
+                                curEntity.components.health.value -= Math.min(
+                                    5,
+                                    entities[entityId2].components.appearance.size - negativeDamageCutoff
+                                );
+
+
+                            } else {
+                                // Flash the canvas. NOTE: This is ok for a tutorial,
+                                // but ideally this would not be coupled in the
+                                // collision system
+                                ECS.$canvas.className='goodHit';
+                                setTimeout(function(){
+                                    ECS.$canvas.className='';
+                                }, 100);
+                            }
                         }
 
                         // update the score
                         ECS.$score.innerHTML = +(ECS.$score.innerHTML) + 1;
+
+                        delete ECS.entities[entityId2];
 
                         break;
                     }
@@ -111,32 +140,20 @@ ECS.systems.collision = function systemCollision ( entities ) {
         }
     }
 
-    // Now that all entities have been checked, do something if collision 
-    // happened
-
-    if(entityIndiciesCollidedWith.length > 0){
-        for(i=0; i<entityIndiciesCollidedWith.length; i++){
-            // Systems can also update the available entities,
-            // which affects other systems (once an entity is 
-            // removed in this case, it won't be rendered)
-            //
-            // remove the entity
-            ECS.entities.splice(entityIndiciesCollidedWith[i], 1);
-        }
-    }
-
-    if(entityIndiciesCollidedWith.length > 0){
-        for(i=0; i<entityIndiciesCollidedWith.length; i++){
+    // Add new entities if the player collided with any entities
+    // ----------------------------------
+    if(entityIdsCollidedWith.length > 0){
+        for(i=0; i<entityIdsCollidedWith.length; i++){
             var newEntity;
 
             // Don't add more entities if there are already too many
-            if(ECS.entities.length < 30){
+            if(Object.keys(ECS.entities).length < 30){
 
                 for(var k=0; k < 3; k++){
                     // Add some new collision rects randomly
                     if(Math.random() < 0.8){
                         newEntity = new ECS.Assemblages.CollisionRect();
-                        ECS.entities.push(newEntity);
+                        ECS.entities[newEntity.id] = newEntity;
 
                         // add a 60% chance that they'll decay
                         if(Math.random() < 0.8){

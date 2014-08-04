@@ -13,11 +13,10 @@ ECS.systems.decay = function systemDecay ( entities ) {
     // feeds in relevant entities to the system, but for demo purposes we'll
     // assume all entities are passed in and iterate over them.
     var curEntity; 
-    var entityIndiciesToRemove = [];
 
     // iterate over all entities
-    for( var i=0, len=entities.length; i < len; i++ ){
-        curEntity = entities[i];
+    for( var entityId in entities ){
+        curEntity = entities[entityId];
 
         // First, check if the entity is dead
         if(curEntity.components.playerControlled){
@@ -80,16 +79,9 @@ ECS.systems.decay = function systemDecay ( entities ) {
                     ECS.game.endGame();
                 } else {
                     // otherwise, remove the entity
-                    entityIndiciesToRemove.push(ECS.entities.indexOf(curEntity));
+                    delete entities[entityId];
                 }
             }
-        }
-    }
-
-    // If we need to remove entities, do it after iterating
-    if(entityIndiciesToRemove.length > 0){
-        for( i=0; i<entityIndiciesToRemove.length; i++){
-            ECS.entities.splice(entityIndiciesToRemove[i], 1);
         }
     }
 };
