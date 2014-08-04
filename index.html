@@ -7,23 +7,41 @@
 
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
+
+    <link href='http://fonts.googleapis.com/css?family=VT323' rel='stylesheet' type='text/css'>
+
     <style>
         body, html {
+            background: RGBA(151, 135, 110, 0.2);
             bottom: 0;
-            font-family: 'Helvetica', sans-serif;
+            font-family: 'VT323', monospace;
             left: 0;
+            margin: 0;
+            padding: 0;
             position: absolute;
             right: 0;
             top: 0;
         }
+
+        h1 { font-size: 7em; }
+        h2 { font-size: 5em; }
+        h3 { font-size: 3em; }
+        a {
+            color: #336699;
+        }
+
         canvas {
             background: #ffffff;
-            border: 1px solid #343434;
+            border: 5px solid #343434;
+            border-radius: 3px;
             cursor: none;
             display: table;
             margin: 0 auto;
             transition: all 0.2s;
             position: relative;
+        }
+        canvas.game-over {
+            background: #181818;
         }
         canvas.badHit {
             background: rgba(255,0,0,0.4);
@@ -33,13 +51,13 @@
         }
 
         #score {
-            font-size: 4em;
+            font-size: 6em;
             text-shadow: 0 0 1px #343434;
+            text-shadow: 1px 1px 0 #ffffff, 2px 2px 0 #ffffff, 3px 3px 0 #ffffff, 4px 4px 0 #ffffff;
         }
 
         #game-over {
-            background: rgba(0,0,0,0.95);
-            bottom: 0;
+            bottom: 80px;
             color: #ffffff;
             left: 0;
             position: fixed;
@@ -55,25 +73,51 @@
             opacity: 0;
             visibility: hidden;
         }
-        h1 { font-size: 7em; }
-        h2 { font-size: 5em; }
-        h3 { font-size: 3em; }
-        a {
-            color: #336699;
+        #game-over h1,#game-over h2 {
+            text-shadow: 1px 1px 0 #888, 2px 2px 0 #888, 3px 3px 0 #888;
         }
+        #game-over h1 {
+            margin-top: 1.2em;
+        }
+        #game-over h2 {
+            margin-bottom: 0.1em;
+        }
+        #game-over h3 {
+            margin: 0;
+            padding: 0;
+        }
+        #game-over a {
+            border-bottom: 1px solid #22ff22;
+            color: #22ff22;
+            text-shadow:  1px 1px 0 #000000, 2px 2px 0 #000000, 3px 3px 0 #000000;
+            text-decoration: none;
+        }
+        
+
+
         .center { 
             text-align: center;
         }
         .description {
             padding-top: 2em;
-            font-style: italic;
         }
+        .description h2 {
+            margin: 0 0 0.1em 0;
+            padding: 0;
+        }
+        .description p {
+            padding: 0;
+            margin: 0;
+        }
+        .italic { font-style: italic; }
     </style>
 </head>
 <body>
     <div id='score' class='center'>0</div>
 
-    <canvas id='game-canvas' width="600" height="400"></canvas>
+    <canvas id='game-canvas' width="600" height="400"> </canvas>
+
+
     <div id='game-over' class='hidden'> 
         <h1>
             Game Over
@@ -89,7 +133,17 @@
     </div>
 
     <div class='description center'>
+        <h2>Rectangle Eater</h2>
+        <p>
         Big guys hurt. Small guys help.
+        </p>
+        <br />
+        <br />
+        <br />
+        <p class='italic'>
+        This is a hacked together demonstration of <a href='BLOGLINK'>Entity Component System</a> by 
+            <a href='http://github.com/enoex' target='blank'>@enoex</a>
+        </p>
     </div>
     
     <!-- Scripts -->

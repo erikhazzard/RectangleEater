@@ -22,7 +22,8 @@ ECS.Game = function Game (){
         entity.addComponent( new ECS.Components.Appearance());
         entity.addComponent( new ECS.Components.Position());
 
-        if(Math.random() < 0.3){
+        // % chance for decaying rects
+        if(Math.random() < 0.8){
             entity.addComponent( new ECS.Components.Health() );
         }
 
@@ -91,6 +92,11 @@ ECS.Game = function Game (){
         self._running = false;
         document.getElementById('final-score').innerHTML = +(ECS.$score.innerHTML);
         document.getElementById('game-over').className = '';
+
+        // set a small timeout to make sure we set the background
+        setTimeout(function(){
+            document.getElementById('game-canvas').className = 'game-over';
+        }, 100);
     };
 
 
