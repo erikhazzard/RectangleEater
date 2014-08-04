@@ -10,7 +10,7 @@
 
 // Appearance 
 // --------------------------------------
-ECS.Components.Appearance = function componentAppearance ( params ){
+ECS.Components.Appearance = function ComponentAppearance ( params ){
     // Appearance specifies data for color and size
     params = params || {};
 
@@ -32,7 +32,7 @@ ECS.Components.Appearance.prototype.name = 'appearance';
 
 // Health
 // --------------------------------------
-ECS.Components.Health = function componentHealth ( value ){
+ECS.Components.Health = function ComponentHealth ( value ){
     value = value || 20;
     this.value = value;
 
@@ -42,7 +42,7 @@ ECS.Components.Health.prototype.name = 'health';
 
 // Position
 // --------------------------------------
-ECS.Components.Position = function componentPosition ( params ){
+ECS.Components.Position = function ComponentPosition ( params ){
     params = params || {};
 
     // Generate random values if not passed in
@@ -58,7 +58,7 @@ ECS.Components.Position.prototype.name = 'position';
 
 // playerControlled 
 // --------------------------------------
-ECS.Components.PlayerControlled = function componentPlayerControlled ( params ){
+ECS.Components.PlayerControlled = function ComponentPlayerControlled ( params ){
     this.pc = true;
     return this;
 };
@@ -66,7 +66,7 @@ ECS.Components.PlayerControlled.prototype.name = 'playerControlled';
 
 // Collision
 // --------------------------------------
-ECS.Components.Collision = function componentCollision ( params ){
+ECS.Components.Collision = function ComponentCollision ( params ){
     this.collides = true;
     return this;
 };
