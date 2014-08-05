@@ -1,0 +1,147 @@
+<!DOCTYPE html> 
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Rectangle Eater - Entity Component System Javascript Demo</title>
+
+    <meta name="description" content="">
+    <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
+
+    <link href='http://fonts.googleapis.com/css?family=VT323' rel='stylesheet' type='text/css'>
+
+    <style>
+
+        body, html {
+            background: RGBA(151, 135, 110, 0.2);
+            bottom: 0;
+            font-family: 'VT323', monospace;
+            left: 0;
+            margin: 0;
+            padding: 0;
+            position: absolute;
+            right: 0;
+            top: 0;
+        }
+
+        canvas { 
+            border: 2px solid #343434;
+            display: table;
+            margin: 2em auto;
+        }
+
+    </style>
+</head>
+<body>
+
+    Test 2
+    <canvas id='canvas' width="300" height="300"></canvas>
+
+    <div id='output'></div>
+
+
+    <script src='scripts/lib/hammer.js'></script>
+
+    <script>
+        ECS = { 
+            $canvas: document.getElementById('canvas'),
+            context: document.getElementById('canvas').getContext("2d"),
+            $output: document.getElementById('output') 
+        };
+
+
+        var userInputPosition = {
+            x: 0,
+            y: 0,
+            lastX: 0,
+            lastY: 0
+        };
+
+        var mc = new Hammer.Manager(ECS.$canvas);
+        mc.add(new Hammer.Pan({ threshold: 0, pointers: 0 }));
+        mc.on("panstart", function onPanStart(ev){
+
+            console.log(">>>>>>>>>>", ev.center, ev);
+            userInputPosition.isTouch = true;
+
+            var rect = ECS.$canvas.getBoundingClientRect();
+            userInputPosition.x = ev.center.x - rect.left - 30;
+            userInputPosition.y = ev.center.y - rect.top - 30;
+
+            userInputPosition.lastX = userInputPosition.x;
+            userInputPosition.lastY = userInputPosition.y;
+
+            ECS.$output.innerHTML = JSON.stringify(userInputPosition, null, 4);
+        });
+
+        mc.on("panmove", function onPanMove(ev) {
+            // For touch events, don't use x/y
+            userInputPosition.lastX = userInputPosition.lastX;
+            userInputPosition.lastY = userInputPosition.lastY;
+
+            userInputPosition.x = userInputPosition.lastX + ev.deltaX;
+            userInputPosition.y = userInputPosition.lastY + ev.deltaY;
+
+            userInputPosition.isTouch = true;
+            ECS.$output.innerHTML = JSON.stringify(userInputPosition, null, 4);
+        });
+
+        mc.on("panend", function onPanEnd(ev){
+            userInputPosition.isTouch = true;
+
+            userInputPosition.lastX = userInputPosition.x;
+            userInputPosition.lastY = userInputPosition.y;
+
+            ECS.$output.innerHTML = JSON.stringify(userInputPosition, null, 4);
+        });
+
+        // ------------------------------
+        //
+        // RENDER
+        //
+        // ------------------------------
+        function clearCanvas () {
+            // Store the current transformation matrix
+            ECS.context.save();
+
+            // Use the identity matrix while clearing the canvas
+            ECS.context.setTransform(1, 0, 0, 1, 0, 0);
+            ECS.context.clearRect(0, 0, ECS.$canvas.width, ECS.$canvas.height);
+
+            // Restore the transform
+            ECS.context.restore();
+        }
+
+        var loop = function (){
+            clearCanvas();
+            ECS.context.fillStyle = 'rgba(0,0,0,1)';
+            ECS.context.strokeStyle = 'rgba(0,0,0,1)';
+
+            // draw the rect
+            ECS.context.fillRect( 
+                userInputPosition.x + 20/2,
+                userInputPosition.y + 20/2,
+                20, 20
+            );
+            // stroke it
+            ECS.context.strokeRect(
+                userInputPosition.x + 20/2,
+                userInputPosition.y + 20/2,
+                20, 20
+            );
+
+            requestAnimationFrame(loop);
+        };
+        requestAnimationFrame(loop);
+
+
+
+    </script>
+
+
+
+
+
+
+</body>
+</html>

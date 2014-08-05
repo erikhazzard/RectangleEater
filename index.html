@@ -6,7 +6,7 @@
     <title>Rectangle Eater - Entity Component System Javascript Demo</title>
 
     <meta name="description" content="">
-    <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
 
     <link href='http://fonts.googleapis.com/css?family=VT323' rel='stylesheet' type='text/css'>
 
@@ -39,7 +39,17 @@
             margin: 0 auto;
             transition: all 0.2s;
             position: relative;
+            width: 600px;
+            height: 400px;
         }
+
+        @media only screen and (max-width : 800px) { 
+            canvas {
+                width: 300px;
+                height: 200px;
+            }
+        }
+
         canvas.game-over {
             background: #181818;
         }
@@ -113,7 +123,7 @@
 <body>
     <div id='score' class='center'>0</div>
 
-    <canvas id='game-canvas' width="600" height="400"> </canvas>
+    <canvas id='game-canvas' width=600 height=400></canvas>
 
 
     <div id='game-over' class='hidden'> 
@@ -173,6 +183,7 @@
 
     </script>
 
+    <script src='scripts/lib/hammer.js'></script>
     <script src='scripts/Entity.js'></script>
     <script src='scripts/Components.js'></script>
     <script src='scripts/Assemblages.js'></script>
